@@ -42,7 +42,7 @@ def init_app(app):
        login_required but they are not authorized.
 
        Endpoints like /dashboard, /program/1, etc. redirect the user to the
-       /login page.
+       /banana page.
 
        Endpoints like /api /query, /import, etc. resolve with 401 UNAUTHORIZED
        and a simple json error object.
@@ -50,10 +50,10 @@ def init_app(app):
     if (re.match(r'^(\/api|\/query|\/search)', request.path) or
        request.headers.get('X-Requested-By') == 'GGRC'):
       return json.dumps({'error': 'unauthorized'}), 401
-    return redirect(login_url('/login', request.url))
+    return redirect(login_url('/banana', request.url))
 
-  app.route('/login')(login_module.login)
-  app.route('/logout')(login_module.logout)
+  app.route('/banana')(login_module.login)
+  app.route('/ananas')(login_module.logout)
 
   app.login_manager.user_loader(user_loader)
   if hasattr(login_module, 'before_request'):
