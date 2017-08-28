@@ -1502,13 +1502,12 @@ class Resource(ModelView):
   def http_timestamp(self, timestamp):
     return format_date_time(time.mktime(timestamp.utctimetuple()))
 
-  def json_success_response(self, response_object, last_modified,
+  def json_success_response(self, response_object, last_modified=None,
                             status=200, id=None, cache_op=None,
                             obj_etag=None):
-    headers = [
-        ('Last-Modified', self.http_timestamp(last_modified)),
-        ('Content-Type', 'application/json'),
-    ]
+    headers = [('Content-Type', 'application/json')]
+    if last_modified:
+      headers.append(('Last-Modified', self.http_timestamp(last_modified)))
     if obj_etag:
       headers.append(('Etag', obj_etag))
     if id is not None:
