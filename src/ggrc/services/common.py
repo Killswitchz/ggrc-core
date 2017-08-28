@@ -1549,6 +1549,46 @@ class ReadOnlyResource(Resource):
       raise NotImplementedError()
 
 
+class ExtendedResource(Resource):
+  """Extended resource with additional command support."""
+
+  @classmethod
+  def add_to(cls, app, url, model_class=None, decorators=()):
+    """Register view methods.
+
+    This method only extends original resource add_to, with a command option
+    for get requests.
+    """
+    if model_class:
+      service_class = type(model_class.__name__, (cls,), {
+          '_model': model_class,
+      })
+      import ggrc.services
+      setattr(ggrc.services, model_class.__name__, service_class)
+    else:
+      service_class = cls
+    view_func = service_class.as_view(service_class.endpoint_name())
+    view_func = cls.decorate_view_func(view_func, decorators)
+    app.add_url_rule(
+        url,
+        defaults={cls.pk: None},
+        view_func=view_func,
+        methods=['GET', 'POST'])
+    app.add_url_rule(
+        '{url}/<{type}:{pk}>'.format(url=url, type=cls.pk_type, pk=cls.pk),
+        view_func=view_func,
+        methods=['GET', 'PUT', 'DELETE'])
+    app.add_url_rule(
+        '{url}/<{type}:{pk}>/<command>'.format(
+            url=url,
+            type=cls.pk_type,
+            pk=cls.pk
+        ),
+        view_func=view_func,
+        methods=['GET']
+    )
+
+
 def filter_resource(resource, depth=0, user_permissions=None):  # noqa
   """
   Returns:
