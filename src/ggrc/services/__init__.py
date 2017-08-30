@@ -70,6 +70,7 @@ def contributed_services():
 
 
 def all_services():
+  """Get services from all modules."""
   from ggrc.extensions import get_extension_modules
 
   services = contributed_services()
@@ -84,6 +85,7 @@ def all_services():
 
 
 def init_extra_services(app):
+  """Add extra service url rules."""
   from ggrc.login import login_required
 
   from .search import search

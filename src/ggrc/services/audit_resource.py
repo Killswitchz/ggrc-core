@@ -19,7 +19,12 @@ from ggrc.services import common
 class AuditResource(common.ExtendedResource):
   """Resource handler for audits."""
 
+  # method post is abstract and not used.
+  # pylint: disable=abstract-method
+
   def get(self, *args, **kwargs):
+    # This is to extend the get request for additional data.
+    # pylint: disable=arguments-differ
     command_map = {
         None: super(AuditResource, self).get,
         "summary": self.summary_query,
@@ -30,6 +35,9 @@ class AuditResource(common.ExtendedResource):
     return command_map[command](*args, **kwargs)
 
   def summary_query(self, id):
+    """Get data for audit summary page."""
+    # id name is used as a kw argument and can't be changed here
+    # pylint: disable=invalid-name,redefined-builtin
     with benchmark("check audit permissions"):
       audit = models.Audit.query.get(id)
       if not permissions.is_allowed_read_for(audit):
