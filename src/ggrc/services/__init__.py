@@ -14,6 +14,7 @@ def contributed_services():
   import ggrc.models.all_models as models
   from ggrc.services.relationship_resource import RelationshipResource
   from ggrc.services.audit_resource import AuditResource
+  from ggrc.services.assessment_resource import AssessmentResource
   from ggrc.access_control.role import AccessControlRole
 
   return [
@@ -27,7 +28,7 @@ def contributed_services():
       service('control_assertions', models.ControlAssertion),
       service('contexts', models.Context),
       service('controls', models.Control),
-      service('assessments', models.Assessment),
+      service('assessments', models.Assessment, AssessmentResource),
       service('assessment_templates', models.AssessmentTemplate),
       service('comments', models.Comment),
       service('custom_attribute_definitions',
