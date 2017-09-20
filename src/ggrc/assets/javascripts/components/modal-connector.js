@@ -209,56 +209,6 @@
         }
         this.viewModel.attr('show_new_object_form', false);
       },
-      updateActions: function (item, isUnmap) {
-        var instance = this.viewModel.attr('instance');
-        var actions = instance.attr('actions');
-        var actionName = isUnmap ? 'remove_related' : 'add_related';
-
-        // remove from the actions in case when the mapping was added
-        var removeFrom = isUnmap ? 'add_related' : 'remove_related';
-
-        var removed = _.remove(actions.attr(removeFrom) || [],
-          function (actionItem) {
-            return actionItem.id === item.id && actionItem.type === item.type;
-          }
-        );
-
-        if (!removed.length) {
-          if (!actions.attr(actionName)) {
-            actions.attr(actionName, []);
-          }
-
-          actions.attr(actionName).push({
-            id: item.id,
-            type: item.type
-          });
-        }
-      },
-      mananeObjectMappings: function (data, isUnmap) {
-        var instance = this.viewModel.attr('instance');
-        var list = this.viewModel.attr('list');
-        var self = this;
-
-        if (!instance.attr('actions')) {
-          instance.attr('actions', {});
-        }
-
-        _.each(data.arr || [data], function (item) {
-          var index;
-          if (isUnmap) {
-            self.updateActions(item, true);
-
-            // remove from list
-            index = _.findIndex(list, function (listItem) {
-              return listItem.id === item.id && listItem.type === item.type;
-            });
-            self.viewModel.attr('list').splice(index, 1);
-          } else {
-            self.updateActions(item);
-            self.addListItem(item);
-          }
-        });
-      },
       '[data-toggle=unmap] click': function (el, ev) {
         ev.stopPropagation();
 
@@ -266,11 +216,6 @@
           var obj = $(resultEl).data('result');
           var len = this.viewModel.list.length;
           var mapping;
-
-          if (this.viewModel.attr('fromQueryApi')) {
-            this.mananeObjectMappings(obj, true);
-            return;
-          }
 
           if (this.viewModel.attr('deferred')) {
             this.viewModel.changes.push({what: obj, how: 'remove'});
@@ -355,12 +300,6 @@
       addMapings: function (el, ev, data) {
         var mapping;
         ev.stopPropagation();
-
-        if (this.viewModel.attr('fromQueryApi')) {
-          console.log('add by ACTIONS');
-          this.mananeObjectMappings(data);
-          return;
-        }
 
         can.each(data.arr || [data], function (obj) {
           if (this.viewModel.attr('deferred')) {
