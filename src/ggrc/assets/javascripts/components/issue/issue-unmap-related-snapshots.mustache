@@ -55,7 +55,9 @@
                     </div>
                 </object-list>
             </div>
+            {{#if paging.total}}
             <tree-pagination {(paging)}="paging"></tree-pagination>
+            {{/if}}
         </div>
     </div>
     <div class="simple-modal__footer">
