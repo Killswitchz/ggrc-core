@@ -31,10 +31,12 @@
                 Related Audit
             </div>
             {{#if relatedAudit.title}}
-                <business-object-list-item
-                    ($click)="openObject({relatedAudit})"
-                    {instance}="relatedAudit">
-                </business-object-list-item>
+                <div class="related-snapshots__audit-container">
+                    <business-object-list-item
+                        ($click)="openObject({relatedAudit})"
+                        {instance}="relatedAudit">
+                    </business-object-list-item>
+                </div>
             {{/if}}
         </div>
         <div class="simple-modal__section">
