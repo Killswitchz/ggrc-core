@@ -117,12 +117,13 @@ export default GGRC.Components('issueUnmapRelatedSnapshots', {
       window.open(url, '_blank');
     },
     unmap: function () {
-      var sourceIds = _.pluck(
-        this.attr('issueInstance.related_sources'),
-        'id');
-      var destinationIds = _.pluck(
-        this.attr('target.related_destinations'),
-        'id');
+      var sourceIds = _.union(
+        _.pluck(this.attr('issueInstance.related_sources'), 'id'),
+        _.pluck(this.attr('issueInstance.related_destinations'), 'id'));
+      var destinationIds = _.union(
+        _.pluck(this.attr('target.related_sources'), 'id'),
+        _.pluck(this.attr('target.related_destinations'), 'id'));
+
       var relId = _.intersection(sourceIds, destinationIds);
       var relationship = CMS.Models.Relationship.findInCacheById(relId);
       var currentObject = GGRC.page_instance();
