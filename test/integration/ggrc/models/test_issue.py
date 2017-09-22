@@ -318,6 +318,7 @@ class TestIssueUnmap(TestCase):
     response = self.generator.api.delete(unmap_rel2, {"cascade": "true"})
     self.assert200(response)
 
+    issue = all_models.Issue.query.get(self.issue_id)
     snap1_issue_rel = self.get_relationships(
         self.snapshot_ids[1], "Snapshot", self.issue_id, "Issue"
     )
@@ -326,6 +327,8 @@ class TestIssueUnmap(TestCase):
     )
     self.assertEqual(snap1_issue_rel.count(), 0)
     self.assertEqual(audit_issue_rel.count(), 0)
+    self.assertIsNone(issue.audit_id)
+    self.assertIsNone(issue.context_id)
     self.assertEqual(
         all_models.Relationship.query.filter_by(id=self.unmap_rel_id2).count(),
         0
