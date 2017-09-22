@@ -71,9 +71,8 @@ export default GGRC.Components('issueUnmapRelatedSnapshots', {
         .then(function (snapResp, audit) {
           var snapshots = snapResp[0][0].Snapshot.values;
           var total = snapResp[0][0].Snapshot.total;
-          var title = 'Unmapping (' +
-            (total + 1) +
-            ' objects)';
+          var title = 'Unmapping (' + (total + 1) +
+            (total ? ' objects' : ' object') + ')';
 
           self.attr('relatedAudit', audit);
           self.attr('relatedSnapshots', snapshots);
