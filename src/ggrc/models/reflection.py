@@ -313,7 +313,7 @@ class AttributeInfo(object):
       snapshot_mappings = all_mappings & rules.Types.all
       direct_mappings = all_mappings - rules.Types.all
       definitions.update(cls._generate_mapping_definition(
-          snapshot_mappings, cls.SNAPSHOT_MAPPING_PREFIX, "map:{}",
+          snapshot_mappings, cls.SNAPSHOT_MAPPING_PREFIX, "map:{} versions",
       ))
     else:
       direct_mappings = all_mappings

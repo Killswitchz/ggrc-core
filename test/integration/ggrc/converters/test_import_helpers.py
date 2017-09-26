@@ -11,6 +11,7 @@ from ggrc.access_control import roleable
 from ggrc.converters import column_handlers
 from ggrc.converters import import_helper
 from ggrc.converters.import_helper import get_object_column_definitions
+from ggrc.snapshotter.rules import Types
 from ggrc.utils.rules import get_mapping_rules, get_unmapping_rules
 from ggrc.utils import title_from_camelcase
 from ggrc_risks import models as r_models
@@ -24,8 +25,17 @@ def get_mapping_names(class_name):
   """Get mapping column names."""
   mapping_rules = get_mapping_rules().get(class_name)
   if mapping_rules is not None:
-    pretty_mapping_rules = (title_from_camelcase(r) for r in mapping_rules)
-    mapping_names = {"map:{}".format(n) for n in pretty_mapping_rules}
+    if class_name in Types.scoped | Types.parents:
+      mapping_names = set()
+      for mapped_type in mapping_rules:
+        if mapped_type in Types.all:
+          format_ = "map:{} versions"
+        else:
+          format_ = "map:{}"
+        mapping_names.add(format_.format(title_from_camelcase(mapped_type)))
+    else:
+      pretty_mapping_rules = (title_from_camelcase(r) for r in mapping_rules)
+      mapping_names = {"map:{}".format(n) for n in pretty_mapping_rules}
   else:
     mapping_names = None
   return mapping_names

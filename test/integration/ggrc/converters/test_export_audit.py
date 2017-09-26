@@ -48,6 +48,10 @@ class TestAuditExport(TestCase):
     }])["Audit"][0]
 
     for type_, slugs in mapped_slugs.items():
-      mapping_name = "map:{}".format(utils.title_from_camelcase(type_))
+      if type_ in Types.all:
+        format_ = "map:{} versions"
+      else:
+        format_ = "map:{}"
+      mapping_name = format_.format(utils.title_from_camelcase(type_))
       self.assertIn(mapping_name, audit_data)
       self.assertEqual(audit_data[mapping_name], "\n".join(sorted(slugs)))
